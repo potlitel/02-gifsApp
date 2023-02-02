@@ -12,14 +12,17 @@ export class GifsService {
   public resultados: Gif[] = [];
 
   constructor( private http: HttpClient ){
+    //Obtenemos, en caso de existir, los valores del historial de búsqueda que hemos realizado previamente
     this._historial = JSON.parse( localStorage.getItem( 'historial' )! ) || [];
+    //Obtenemos, en caso de existir, los valores del resultado de búsqueda que hemos realizado previamente
+    this.resultados = JSON.parse( localStorage.getItem( 'resultados' )! ) || [];
     // if ( localStorage.getItem( 'historial' ) ) {
     //   this._historial = JSON.parse( localStorage.getItem( 'historial' )! );
     // }
   }
 
   get historial(): string[] {
-    //rompemos la referencia con el uso del spread operator
+    //rompemos la referencia con el uso del spread operator y de este modo pueden modificar esta propiedad 'historial' pero no la original 'this._historial'
     return [...this._historial];
   }
 
@@ -38,7 +41,10 @@ export class GifsService {
     this.http.get<SearchGifsResponse>(`https://api.giphy.com/v1/gifs/search?api_key=8etXzsLpRnXD7ghqQsON6BixkOmKuI4i&q=${ termino }&limit=25`).subscribe(
       ( resp ) => {
         console.log( resp.data );
+        //Asignamos los resultados a la variable 'resultados'
         this.resultados = resp.data;
+        //Almacenamos los resultados en el local storage del navegador
+        localStorage.setItem( 'resultados', JSON.stringify( this.resultados ) );
       }
     );
   }
