@@ -15,4 +15,9 @@ export class SidebarComponent {
     constructor( private gisfService: GifsService ){
 
     }
+
+    buscar( termino: string ){
+        //console.log(termino);
+        this.gisfService.buscarGifs( termino );
+    }
 }
